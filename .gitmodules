@@ -1,0 +1,3 @@
+[submodule "fprime-sx1303/Components/SX1303Hal"]
+	path = fprime-sx1303/Components/SX1303Hal
+	url = https://github.com/Lora-net/sx1302_hal
