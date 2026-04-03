@@ -1,8 +1,18 @@
 module SX1303 {
     active component SX1303Manager {
 
+        enum gwState { POWER_OFF, POWER_ON, RESET, STARTUP_DELAY, CHIP_ID_CHECK, CALIBRATION_READ, CONFIGURE, RUNNING };
+
         # One async command/port is required for active components
         # This should be overridden by the developers with a useful command/port
+
+        @ Command to turn on or off the gateway
+        async command GW_ON_OFF(
+            onOff: Fw.On @< Indicates whether the gateway should be on or off
+        )
+
+        @ Reset gateway
+        async command GW_RESET
 
         @ Report the radio serial number
         async command ReportNodeIdentifier
@@ -33,11 +43,23 @@ module SX1303 {
         id 0 \
         format "Radio identification: {}"
 
+        @ Gateway state event, produced whenever the gateway state changes
+        event GwState(new_state: gwState) severity activity high format "SX1303 State: {}"
+
         @ Example port: receiving calls from the rate group
         sync input port run: Svc.Sched
 
+        @ Port for reset control
+        output port resetGpioWrite: Drv.GpioWrite
+
+        @ Port for Power-en control
+        output port powerGpioWrite: Drv.GpioWrite
+
         @ Port for SPI bus communication
         output port spiReadWrite: Drv.SpiReadWrite
+
+        @ Telemetry channel to report gateway state.
+        telemetry GatewayState: gwState
 
         #@ Example parameter
         #param PARAMETER_NAME: U32

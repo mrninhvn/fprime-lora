@@ -8,9 +8,12 @@ module SX1303 {
         constant STACK_SIZE = 64 * 1024
     }
 
-    instance sx1303Driver: Drv.LinuxSpiDriver base id SX1303.SubtopologyConfig.BASE_ID + 0x00002000 {
+    instance sx1303PowerDriver: Drv.LinuxGpioDriver base id SX1303.SubtopologyConfig.BASE_ID + 0x00002000
+    instance sx1303ResetDriver: Drv.LinuxGpioDriver base id SX1303.SubtopologyConfig.BASE_ID + 0x00003000
+
+    instance sx1303SpiDriver: Drv.LinuxSpiDriver base id SX1303.SubtopologyConfig.BASE_ID + 0x00004000 {
         phase Fpp.ToCpp.Phases.configComponents """
-        if (not SX1303::sx1303Driver.open(state.sx1303.device.device, state.sx1303.device.select, Drv::SPI_FREQUENCY_5MHZ)) {
+        if (not SX1303::sx1303SpiDriver.open(state.sx1303.device.device, state.sx1303.device.select, Drv::SPI_FREQUENCY_5MHZ)) {
             Fw::Logger::log("[ERROR] SX1303 SPI open failed\\n");
         }
         else {

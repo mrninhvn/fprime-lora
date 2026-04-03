@@ -41,12 +41,37 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
     // Handler implementations for commands
     // ----------------------------------------------------------------------
 
+    //! Handler implementation for command GW_ON_OFF
+    //!
+    //! Command to turn on or off the gateway
+    void GW_ON_OFF_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                              U32 cmdSeq,           //!< The command sequence number
+                              Fw::On onOff          //!< Indicates whether the gateway should be on or off
+                              ) override;
+
+    //! Handler implementation for command GwReset
+    //!
+    //! Reset the gateway
+    void GW_RESET_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                            U32 cmdSeq            //!< The command sequence number
+                            ) override;
+
     //! Handler implementation for command ReportNodeIdentifier
     //!
     //! Report the radio serial number
     void ReportNodeIdentifier_cmdHandler(FwOpcodeType opCode,  //!< The opcode
                                          U32 cmdSeq            //!< The command sequence number
                                          ) override;
+  
+  private:
+    //! Tracks the state of the SX1303
+    SX1303::SX1303Manager_gwState m_state;
+    Fw::On led_state;
+
+  public:
+    bool power_on(bool on);
+    //! Reset the gateway by toggling the appropriate GPIO pins
+    bool reset();
 };
 
 }  // namespace SX1303

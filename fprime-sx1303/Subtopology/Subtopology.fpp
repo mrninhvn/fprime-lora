@@ -10,10 +10,14 @@ module SX1303 {
 
     topology Subtopology {
         instance sx1303Manager
-        instance sx1303Driver
+        instance sx1303SpiDriver
+        instance sx1303PowerDriver
+        instance sx1303ResetDriver
         
         connections SX1303 {
-            sx1303Manager.spiReadWrite -> sx1303Driver.SpiReadWrite
+            sx1303Manager.spiReadWrite   -> sx1303SpiDriver.SpiReadWrite
+            sx1303Manager.powerGpioWrite -> sx1303PowerDriver.gpioWrite
+            sx1303Manager.resetGpioWrite -> sx1303ResetDriver.gpioWrite
         }
     }
 }
