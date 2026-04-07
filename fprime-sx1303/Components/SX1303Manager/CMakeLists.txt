@@ -29,15 +29,15 @@ set(libloragw_src
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/loragw_sx1302.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/loragw_sx1302_rx.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/loragw_sx1302_timestamp.c"
-    # "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/loragw_usb.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/loragw_usb.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1250_com.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1250_spi.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1250_usb.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx125x_com.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx125x_spi.c"
     "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1261_com.c"
-    "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1261_spi.c"
-    "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1261_usb.c"
+    # "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1261_spi.c"
+    # "${CMAKE_CURRENT_LIST_DIR}/../SX1303Hal/libloragw/src/sx1261_usb.c"
 )
 
 set(libtools_src

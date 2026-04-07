@@ -14,6 +14,9 @@ module SX1303 {
         @ Reset gateway
         async command GW_RESET
 
+        @ Start gateway
+        async command GW_TEST_TX
+
         @ Report the radio serial number
         async command ReportNodeIdentifier
 
@@ -34,7 +37,7 @@ module SX1303 {
 
         # @ Example event
         # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
-        
+
         @ Produces a node-identifier
         event RadioNodeIdentifier(
               identifier: string size 20 @< Radio identifier
@@ -42,6 +45,9 @@ module SX1303 {
         severity activity high \
         id 0 \
         format "Radio identification: {}"
+
+        @ Debug log
+        event Debug(msg: string size 200) severity activity low format "Debug: {}"
 
         @ Gateway state event, produced whenever the gateway state changes
         event GwState(new_state: gwState) severity activity high format "SX1303 State: {}"

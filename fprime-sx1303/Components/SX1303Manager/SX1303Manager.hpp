@@ -8,6 +8,7 @@
 #define SX1303_SX1303Manager_HPP
 
 #include "fprime-sx1303/Components/SX1303Manager/SX1303ManagerComponentAc.hpp"
+#include "fprime-sx1303/Subtopology/SubtopologyTopologyDefs.hpp"
 
 namespace SX1303 {
 
@@ -56,6 +57,13 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
                             U32 cmdSeq            //!< The command sequence number
                             ) override;
 
+    //! Handler implementation for command GW_START
+    //!
+    //! Start gateway
+    void GW_TEST_TX_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                             U32 cmdSeq            //!< The command sequence number
+                             ) override;
+
     //! Handler implementation for command ReportNodeIdentifier
     //!
     //! Report the radio serial number
@@ -64,14 +72,24 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
                                          ) override;
   
   private:
+    SubtopologyState sx1303State;
     //! Tracks the state of the SX1303
-    SX1303::SX1303Manager_gwState m_state;
+    SX1303::SX1303Manager_gwState m_state = SX1303::SX1303Manager_gwState::POWER_OFF;
     Fw::On led_state;
 
   public:
+    //! Power on gateway
     bool power_on(bool on);
     //! Reset the gateway by toggling the appropriate GPIO pins
     bool reset();
+    //! Get SPI device
+    SX1303Device& get_device() { return sx1303State.device; }
+    //! Write to the SPI bus and handle errors
+    bool spi_transfer(Fw::Buffer& writeBuffer, Fw::Buffer& readBuffer);
+    //! Debug Logging
+    void log_debug(const Fw::LogStringArg& msg);
+    //! Delay ms
+    void delay_ms(U32 ms) { Os::Task::delay(Fw::TimeInterval(0, ms)); }
 };
 
 }  // namespace SX1303

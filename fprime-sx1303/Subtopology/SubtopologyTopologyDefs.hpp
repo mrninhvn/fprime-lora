@@ -7,7 +7,7 @@
 #define SX1303_SubtopologyTopologyDefs_hpp
 
 #include <Fw/Logger/Logger.hpp>
-#include <fprime-sx1303/Subtopology/SX1303Config/FppConstantsAc.hpp>
+// #include <fprime-sx1303/Subtopology/SX1303Config/FppConstantsAc.hpp>
 #include "SX1303Config/SX1303SubtopologyConfig.hpp"
 
 namespace SX1303 {
