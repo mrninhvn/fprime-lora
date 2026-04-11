@@ -57,10 +57,17 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
                             U32 cmdSeq            //!< The command sequence number
                             ) override;
 
-    //! Handler implementation for command GW_START
+    //! Handler implementation for command GW_TEST_TX
     //!
-    //! Start gateway
+    //! Lora test transmission command
     void GW_TEST_TX_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                             U32 cmdSeq            //!< The command sequence number
+                             ) override;
+
+    //! Handler implementation for command GW_TEST_RX
+    //!
+    //! Lora test reception command
+    void GW_TEST_RX_cmdHandler(FwOpcodeType opCode,  //!< The opcode
                              U32 cmdSeq            //!< The command sequence number
                              ) override;
 
@@ -93,5 +100,14 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
 };
 
 }  // namespace SX1303
+
+extern "C" {
+    void sx1303_delay_ms(U32 ms);
+    void sx1303_log_debug(const char* fmt, ...);
+    void sx1303_power_on(bool on);
+    void sx1303_reset(void);
+    void *sx1303_spi_device(void);
+    int sx1303_spi_rw(const uint8_t* writeData, uint8_t* readData, size_t len);
+}
 
 #endif

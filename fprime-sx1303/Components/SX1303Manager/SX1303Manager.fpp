@@ -14,8 +14,11 @@ module SX1303 {
         @ Reset gateway
         async command GW_RESET
 
-        @ Start gateway
+        @ Lora test transmission command
         async command GW_TEST_TX
+
+        @ Lora test reception command
+        async command GW_TEST_RX
 
         @ Report the radio serial number
         async command ReportNodeIdentifier
