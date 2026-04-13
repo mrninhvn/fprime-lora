@@ -67,6 +67,9 @@ module SX1303 {
         @ Port for SPI bus communication
         output port spiReadWrite: Drv.SpiReadWrite
 
+        @ Port for sending packet data to Lora MAC processor
+        output port loraOut: Fw.BufferSend
+
         @ Telemetry channel to report gateway state.
         telemetry GatewayState: gwState
 

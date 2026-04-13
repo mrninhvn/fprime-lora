@@ -15,6 +15,8 @@ extern "C" {
 // Static pointer to the manager instance for C callback
 static SX1303::SX1303Manager* g_sx1303_manager = nullptr;
 
+#define SX1303_DEBUG 0
+
 #define LOG_DEBUG(fmt, ...) \
     do { \
         Fw::LogStringArg _msg; \
@@ -43,7 +45,9 @@ void SX1303Manager ::run_handler(FwIndexType portNum, U32 context) {
 }
 
 void SX1303Manager ::log_debug(const Fw::LogStringArg& msg) {
+    #if SX1303_DEBUG
     this->log_ACTIVITY_LO_Debug(msg);
+    #endif
 }
 
 bool SX1303Manager ::power_on(bool on) {
@@ -90,6 +94,11 @@ bool SX1303Manager ::spi_transfer(Fw::Buffer& writeBuffer, Fw::Buffer& readBuffe
     }
 
     return true;
+}
+
+void SX1303Manager ::lora_out(const uint8_t* data, size_t len) {
+    Fw::Buffer buffer(const_cast<uint8_t*>(data), len);
+    this->loraOut_out(0, buffer);
 }
 
 // ----------------------------------------------------------------------
@@ -181,5 +190,9 @@ extern "C" {
         // LOG_DEBUG("%s: writeData size=%u, readData size=%u", __func__, writeBuffer.getSize(), readBuffer.getSize());
         g_sx1303_manager->spi_transfer(writeBuffer, readBuffer);
         return 0;
+    }
+
+    void sx1303_lora_out(const uint8_t* data, size_t len) {
+        g_sx1303_manager->lora_out(data, len);
     }
 }

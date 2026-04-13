@@ -16,7 +16,7 @@ extern "C" {
 #define	EXIT_SUCCESS	    0	/* Successful exit status.  */
 
 #define DEFAULT_CLK_SRC     0
-#define DEFAULT_FREQ_HZ     915000000U
+#define DEFAULT_FREQ_HZ     921000000U //915000000U
 #define COM_TYPE_DEFAULT    LGW_COM_SPI
 #define COM_PATH_DEFAULT    "/dev/spidev0.0"
 
@@ -415,6 +415,7 @@ int sx1303_test_hal_rx(void) {
                         offset += snprintf(hex_buf + offset, sizeof(hex_buf) - offset, "%02X ", rxpkt[i].payload[j]);
                     }
                     sx1303_log_debug("Payload: %s", hex_buf);
+                    sx1303_lora_out(rxpkt[i].payload, rxpkt[i].size);
                 }
                 sx1303_log_debug("Received %d packets (total:%lu)\n", nb_pkt, nb_pkt_crc_ok);
             }
