@@ -101,6 +101,12 @@ void SX1303Manager ::lora_out(const uint8_t* data, size_t len) {
     this->loraOut_out(0, buffer);
 }
 
+void SX1303Manager ::set_gw_state(SX1303Manager_gwState state) {
+    m_state = state;
+    this->log_ACTIVITY_HI_GwState(m_state);
+    this->tlmWrite_GatewayState(m_state);
+}
+
 // ----------------------------------------------------------------------
 // Handler implementations for commands
 // ----------------------------------------------------------------------
@@ -192,7 +198,15 @@ extern "C" {
         return 0;
     }
 
+    void sx1303_set_state(U8 state) {
+        if (g_sx1303_manager) {
+            g_sx1303_manager->set_gw_state(static_cast<SX1303::SX1303Manager_gwState::T>(state));
+        }
+    }
+
     void sx1303_lora_out(const uint8_t* data, size_t len) {
-        g_sx1303_manager->lora_out(data, len);
+        if (g_sx1303_manager) {
+            g_sx1303_manager->lora_out(data, len);
+        }
     }
 }

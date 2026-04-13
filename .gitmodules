@@ -1,3 +1,6 @@
 [submodule "fprime-sx1303/Components/SX1303Hal"]
 	path = fprime-sx1303/Components/SX1303Hal
 	url = https://github.com/mrninhvn/fprime_sx1302_hal
+[submodule "fprime-loramac/Components/LoRaMac"]
+	path = fprime-loramac/Components/LoRaMac
+	url = https://github.com/mrninhvn/LoRaMac

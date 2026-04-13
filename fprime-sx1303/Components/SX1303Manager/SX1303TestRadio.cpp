@@ -373,6 +373,7 @@ int sx1303_test_hal_rx(void) {
             return EXIT_FAILURE;
         }
 
+        sx1303_set_state(7); /* Set state to "Running" */
         /* Loop until we have enough packets with CRC OK */
         sx1303_log_debug("Waiting for packets...\n");
         nb_pkt_crc_ok = 0;

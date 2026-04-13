@@ -98,6 +98,7 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
     //! Delay ms
     void delay_ms(U32 ms) { Os::Task::delay(Fw::TimeInterval(0, ms)); }
     void lora_out(const uint8_t* data, size_t len);
+    void set_gw_state(SX1303Manager_gwState state);
 };
 
 }  // namespace SX1303
@@ -110,6 +111,7 @@ extern "C" {
     void *sx1303_spi_device(void);
     int sx1303_spi_rw(const uint8_t* writeData, uint8_t* readData, size_t len);
     void sx1303_lora_out(const uint8_t* data, size_t len);
+    void sx1303_set_state(U8 state);
 }
 
 #endif
