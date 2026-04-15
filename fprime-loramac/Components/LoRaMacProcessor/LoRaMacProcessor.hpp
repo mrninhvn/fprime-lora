@@ -49,8 +49,17 @@ class LoRaMacProcessor final : public LoRaMacProcessorComponentBase {
     void commLikeIn_handler(FwIndexType portNum,  //!< The port number
                             Fw::Buffer& data,
                             const ComCfg::FrameContext& context) override;
+
+  public:
+    //! Debug Logging
+    void log_debug(const Fw::LogStringArg& msg);
 };
 
 }  // namespace LORAMAC
+
+extern "C" {
+  void ProcessLoraMac( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr );
+  void loramac_log_debug(const char* fmt, ...);
+}
 
 #endif
