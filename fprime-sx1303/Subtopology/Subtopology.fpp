@@ -11,7 +11,7 @@ module SX1303 {
         instance sx1303SpiDriver
         instance sx1303PowerDriver
         instance sx1303ResetDriver
-        instance sx1303DataProcessor
+        # instance sx1303DataProcessor
         
         connections SX1303 {
             sx1303Manager.spiReadWrite   -> sx1303SpiDriver.SpiReadWrite
@@ -19,7 +19,7 @@ module SX1303 {
             sx1303Manager.resetGpioWrite -> sx1303ResetDriver.gpioWrite
 
             # Connect the SX1303 manager to the LoRa MAC processor
-            sx1303Manager.loraOut -> sx1303DataProcessor.bufferLikeIn
+            # sx1303Manager.loraOut -> sx1303DataProcessor.bufferLikeIn
         }
     }
 }

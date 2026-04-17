@@ -58,7 +58,7 @@ class LoRaMacProcessor final : public LoRaMacProcessorComponentBase {
 }  // namespace LORAMAC
 
 extern "C" {
-  void ProcessLoraMac( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr );
+  void ProcessLoraMac( uint8_t *packet, uint16_t size );
   void loramac_log_debug(const char* fmt, ...);
 }
 

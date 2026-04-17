@@ -14,6 +14,7 @@ set(libloramac_src
     "${CMAKE_CURRENT_LIST_DIR}/../LoRaMac/src/mac/region/Region.c"
     "${CMAKE_CURRENT_LIST_DIR}/../LoRaMac/src/mac/region/RegionCommon.c"
     "${CMAKE_CURRENT_LIST_DIR}/../LoRaMac/src/mac/region/RegionAS923.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../LoRaMac/src/mac/region/RegionEU868.c"
     "${CMAKE_CURRENT_LIST_DIR}/../LoRaMac/src/mac/LoRaMac.c"
     "${CMAKE_CURRENT_LIST_DIR}/../LoRaMac/src/mac/LoRaMacParser.c"
     "${CMAKE_CURRENT_LIST_DIR}/../LoRaMac/src/boards/mcu/utilities.c"

@@ -22,6 +22,6 @@ module SX1303 {
         """
     }
 
-    @ Lora MAC processor to received data from SX1303 and process it for LoRaWAN
-    instance sx1303DataProcessor: LORAMAC.LoRaMacProcessor base id SX1303.SubtopologyConfig.BASE_ID + 0x5000
+    # @ Lora MAC processor to received data from SX1303 and process it for LoRaWAN
+    # instance sx1303DataProcessor: LORAMAC.LoRaMacProcessor base id SX1303.SubtopologyConfig.BASE_ID + 0x5000
 } 

@@ -57,6 +57,7 @@ register_fprime_module(
     SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/SX1303Manager.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/SX1303TestRadio.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/SX1303Gateway.cpp"
         ${libloragw_src}
         ${libtools_src}
     DEPENDS

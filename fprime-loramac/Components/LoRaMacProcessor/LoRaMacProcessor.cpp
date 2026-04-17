@@ -35,16 +35,7 @@ void LoRaMacProcessor ::bufferLikeIn_handler(FwIndexType portNum, Fw::Buffer& fw
     U8* data = fwBuffer.getData();
     U32 size = fwBuffer.getSize();
 
-    char hexBuf[200] = {0};
-    U32 offset = 0;
-    for (U32 i = 0; i < size && offset < sizeof(hexBuf) - 3; i++) {
-        offset += snprintf(hexBuf + offset, sizeof(hexBuf) - offset, "%02X ", data[i]);
-    }
-
-    Fw::String msg(hexBuf);
-    this->log_ACTIVITY_LO_Debug(msg);
-
-    ProcessLoraMac(data, size, 0, 0);
+    ProcessLoraMac(data, size);
 }
 
 void LoRaMacProcessor ::byteStreamLikeIn_handler(FwIndexType portNum,
@@ -66,9 +57,33 @@ void LoRaMacProcessor ::log_debug(const Fw::LogStringArg& msg) {
 
 extern "C" {
 
-#define LORAMAC_PHY_MAXPAYLOAD      255
+#define LORAMAC_PHY_MAXPAYLOAD      256
 
-void ProcessLoraMac( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr ) {
+struct lgw_pkt_rx_s {
+    uint32_t    freq_hz;        /*!> central frequency of the IF chain */
+    int32_t     freq_offset;
+    uint8_t     if_chain;       /*!> by which IF chain was packet received */
+    uint8_t     status;         /*!> status of the received packet */
+    uint32_t    count_us;       /*!> internal concentrator counter for timestamping, 1 microsecond resolution */
+    uint8_t     rf_chain;       /*!> through which RF chain the packet was received */
+    uint8_t     modem_id;
+    uint8_t     modulation;     /*!> modulation used by the packet */
+    uint8_t     bandwidth;      /*!> modulation bandwidth (LoRa only) */
+    uint32_t    datarate;       /*!> RX datarate of the packet (SF for LoRa) */
+    uint8_t     coderate;       /*!> error-correcting code of the packet (LoRa only) */
+    float       rssic;          /*!> average RSSI of the channel in dB */
+    float       rssis;          /*!> average RSSI of the signal in dB */
+    float       snr;            /*!> average packet SNR, in dB (LoRa only) */
+    float       snr_min;        /*!> minimum packet SNR, in dB (LoRa only) */
+    float       snr_max;        /*!> maximum packet SNR, in dB (LoRa only) */
+    uint16_t    crc;            /*!> CRC that was received in the payload */
+    uint16_t    size;           /*!> payload size in bytes */
+    uint8_t     payload[256];   /*!> buffer containing the payload */
+    bool        ftime_received; /*!> a fine timestamp has been received */
+    uint32_t    ftime;          /*!> packet fine timestamp (nanoseconds since last PPS) */
+};
+
+void ProcessLoraMac( uint8_t *packet, uint16_t size ) {
     LoRaMacHeader_t macHdr;
     ApplyCFListParams_t applyCFList;
     GetPhyParams_t getPhy;
@@ -82,10 +97,13 @@ void ProcessLoraMac( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
     uint8_t rxPayload[LORAMAC_PHY_MAXPAYLOAD];
 
     // Abort on empty radio frames
-    if( size == 0 ) {
+    if( packet == nullptr || size == 0 ) {
         loramac_log_debug("empty radio frames");
         return;
     }
+
+    const lgw_pkt_rx_s* gw_packet = reinterpret_cast<const lgw_pkt_rx_s*>(packet);
+    const uint8_t *payload = gw_packet->payload;
 
     macHdr.Value = payload[pktHeaderLen++];
 
@@ -110,20 +128,23 @@ void ProcessLoraMac( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
         }
         case FRAME_TYPE_DATA_CONFIRMED_UP:
         case FRAME_TYPE_DATA_UNCONFIRMED_UP: {
-            loramac_log_debug("Message Type: %s", macHdr.Bits.MType == FRAME_TYPE_DATA_CONFIRMED_UP ? "DATA_CONFIRMED_UP" : "DATA_UNCONFIRMED_UP");
+            loramac_log_debug("Message Type: %s, size: %d", macHdr.Bits.MType == FRAME_TYPE_DATA_CONFIRMED_UP ? "DATA_CONFIRMED_UP" : "DATA_UNCONFIRMED_UP", gw_packet->size);
+            
+            /* Remove by unkown region DR
             // Check if the received payload size is valid
             getPhy.UplinkDwellTime = 0; // unlimited time
-            getPhy.Datarate = DR_2;
+            getPhy.Datarate = DR_0;
             getPhy.Attribute = PHY_MAX_PAYLOAD;
-            phyParam = RegionGetPhyParam( LORAMAC_REGION_AS923, &getPhy );
-            if( ( MAX( 0, ( int16_t )( ( int16_t ) size - ( int16_t ) LORAMAC_FRAME_PAYLOAD_OVERHEAD_SIZE ) ) > ( int16_t )phyParam.Value ) ||
-                ( size < LORAMAC_FRAME_PAYLOAD_MIN_SIZE ) ) {
+            phyParam = RegionGetPhyParam( LORAMAC_REGION_EU868, &getPhy );
+            if( ( MAX( 0, ( int16_t )( ( int16_t ) gw_packet->size - ( int16_t ) LORAMAC_FRAME_PAYLOAD_OVERHEAD_SIZE ) ) > ( int16_t )phyParam.Value ) ||
+                ( gw_packet->size < LORAMAC_FRAME_PAYLOAD_MIN_SIZE ) ) {
                 loramac_log_debug("Invalid payload size %d", phyParam.Value);
                 return;
             }
+            */
 
-            macMsgData.Buffer = payload;
-            macMsgData.BufSize = size;
+            macMsgData.Buffer = const_cast<uint8_t*>(payload);
+            macMsgData.BufSize = gw_packet->size;
             macMsgData.FRMPayload = rxPayload;
             macMsgData.FRMPayloadSize = LORAMAC_PHY_MAXPAYLOAD;
 

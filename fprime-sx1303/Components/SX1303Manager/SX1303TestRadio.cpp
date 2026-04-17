@@ -416,7 +416,6 @@ int sx1303_test_hal_rx(void) {
                         offset += snprintf(hex_buf + offset, sizeof(hex_buf) - offset, "%02X ", rxpkt[i].payload[j]);
                     }
                     sx1303_log_debug("Payload: %s", hex_buf);
-                    sx1303_lora_out(rxpkt[i].payload, rxpkt[i].size);
                 }
                 sx1303_log_debug("Received %d packets (total:%lu)\n", nb_pkt, nb_pkt_crc_ok);
             }

@@ -1,7 +1,22 @@
 module SX1303 {
     active component SX1303Manager {
 
-        enum gwState { POWER_OFF, POWER_ON, RESET, STARTUP_DELAY, CHIP_ID_CHECK, CALIBRATION_READ, CONFIGURE, RUNNING };
+        enum gwState { POWER_OFF, POWER_ON, RESET, CHIP_ID_CHECK, CONFIGURE, RUNNING };
+        enum gwChPlan: U8 {
+            EU868   = 1,
+            US915   = 2,
+            CN779   = 3,
+            EU433   = 4,
+            AU915   = 5,
+            CN470   = 6,
+            AS923   = 7,
+            AS923_2 = 8,
+            AS923_3 = 9,
+            KR920   = 10,
+            IN865   = 11,
+            RU864   = 12,
+            AS923_4 = 13
+        }
 
         # One async command/port is required for active components
         # This should be overridden by the developers with a useful command/port
@@ -20,8 +35,11 @@ module SX1303 {
         @ Lora test reception command
         async command GW_TEST_RX
 
-        @ Report the radio serial number
-        async command ReportNodeIdentifier
+        @ Gateway start command
+        async command GW_START(
+            publicNet: bool, @< Is Public network
+            region: gwChPlan @< Channel Plan ID
+        )
 
         ##############################################################################
         #### Uncomment the following examples to start customizing your component ####
@@ -35,19 +53,8 @@ module SX1303 {
         # @ Telemetry channel to report blinking state.
         # telemetry BlinkingState: Fw.On
 
-        # @ Telemetry channel to report LedTransitions.
-        # telemetry LedTransitions: U64
-
         # @ Example event
         # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
-
-        @ Produces a node-identifier
-        event RadioNodeIdentifier(
-              identifier: string size 20 @< Radio identifier
-        ) \
-        severity activity high \
-        id 0 \
-        format "Radio identification: {}"
 
         @ Debug log
         event Debug(msg: string size 200) severity activity low format "Debug: {}"
@@ -67,11 +74,14 @@ module SX1303 {
         @ Port for SPI bus communication
         output port spiReadWrite: Drv.SpiReadWrite
 
-        @ Port for sending packet data to Lora MAC processor
-        output port loraOut: Fw.BufferSend
+        # @ Port for sending packet data to Lora MAC processor
+        # output port loraOut: Fw.BufferSend
 
         @ Telemetry channel to report gateway state.
         telemetry GatewayState: gwState
+
+        @ Telemetry channel for received LoRa packet metadata
+        telemetry GatewayPacket: SX1303Data
 
         #@ Example parameter
         #param PARAMETER_NAME: U32
