@@ -81,6 +81,66 @@ static constexpr GwChPlanConfig_t CH_PLAN[] = {
         .chan_lora_std  = {true, 0, -200000, 250000, 7, false, 17, false, 1},
         .chan_fsk       = {false, 1, 300000, 125000, 50000},
     },
+
+    // [2] US915
+    {
+        .radio0_freq    = 902700000,
+        .radio1_freq    = 903400000,
+        .sf_enable      = 0b11111111,  // SF5~SF12
+        .chan_multi_sf  = {
+            {true, 0, -400000}, // 902.3 MHz
+            {true, 0, -200000}, // 902.5 MHz
+            {true, 0,       0}, // 902.7 MHz
+            {true, 0,  200000}, // 902.9 MHz
+            {true, 1, -300000}, // 903.1 MHz
+            {true, 1, -100000}, // 903.3 MHz
+            {true, 1,  100000}, // 903.5 MHz
+            {true, 1,  300000}, // 903.7 MHz
+        },
+        .chan_lora_std  = {true, 0, 300000, 500000, 8, false, 17, false, 1},
+        .chan_fsk       = {false, 1, 300000, 125000, 50000},
+    },
+
+    // [3] CN779
+    {},
+    // [4] EU433
+    {},
+    // [5] AU915
+    {},
+    // [6] CN470
+    {},
+    // [7] AS923
+    {},
+
+    // [8] AS923_2 // Vietnam
+    {
+        .radio0_freq    = 921500000,
+        .radio1_freq    = 922300000,
+        .sf_enable      = 0b11111100,  // SF7~SF12
+        .chan_multi_sf  = {
+            {true, 0, -300000}, // 921.2 MHz
+            {true, 0, -100000}, // 921.4 MHz
+            {true, 0,  100000}, // 921.6 MHz
+            {true, 0,  300000}, // 921.8 MHz
+            {true, 1, -300000}, // 922.0 MHz
+            {true, 1, -100000}, // 922.2 MHz
+            {true, 1,  100000}, // 922.4 MHz
+            {true, 1,  300000}, // 922.6 MHz
+        },
+        .chan_lora_std  = {true, 0, 300000, 500000, 8, false, 17, false, 1},
+        .chan_fsk       = {false, 1, 300000, 125000, 50000},
+    },
+
+    // [9] AS923_3
+    {},
+    // [10] KR920
+    {},
+    // [11] IN865
+    {},
+    // [12] RU864
+    {},
+    // [13] AS923_4
+    {},
 };
 
 int8_t sx1303_config(bool publicNet, uint8_t region){
@@ -115,6 +175,11 @@ int8_t sx1303_config(bool publicNet, uint8_t region){
     }
 
     const GwChPlanConfig_t& gwcfg = CH_PLAN[region];
+
+    if (gwcfg.radio0_freq == 0){
+        sx1303_log_debug("ERROR: Not supported region: %d", region);
+        return EXIT_FAILURE;
+    }
 
     /* set configuration for RF chains */
     for (uint8_t radioidx = 0; radioidx < LGW_RF_CHAIN_NB; ++radioidx) {
