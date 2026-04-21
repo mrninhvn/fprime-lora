@@ -106,6 +106,14 @@ void SX1303Manager ::send_gw_packet(const SX1303::SX1303Data& packet){
     this->tlmWrite_GatewayPacket(packet);
 }
 
+bool SX1303Manager ::get_time(Fw::Time &systime) {
+    if (!this->isConnected_timeCaller_OutputPort(0)) {
+        return false;
+    }
+    systime = getTime();
+    return true;
+}
+
 #if LORA_MAC_EXT
 void SX1303Manager ::lora_out(const uint8_t* data, size_t len) {
     Fw::Buffer buffer(const_cast<uint8_t*>(data), len);
@@ -216,6 +224,10 @@ extern "C" {
 
     void sx1303_send_gw_packet(const SX1303::SX1303Data& packet){
         g_sx1303_manager->send_gw_packet(packet);
+    }
+
+    bool sx1303_get_time(Fw::Time &systime){
+        return g_sx1303_manager->get_time(systime);
     }
 
 #if LORA_MAC_EXT

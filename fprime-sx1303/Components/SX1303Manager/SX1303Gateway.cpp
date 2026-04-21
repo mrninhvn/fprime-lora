@@ -442,6 +442,10 @@ int8_t sx1303_gateway_receive(void){
         return EXIT_FAILURE;
     }
 
+    Fw::Time currentTime;
+    if (!sx1303_get_time(currentTime)){
+        sx1303_log_debug("Get system time Error");
+    }
     LoRaMacHeader_t macHdr;
     uint8_t pktHeaderLen = 0;
 
@@ -493,8 +497,10 @@ int8_t sx1303_gateway_receive(void){
 #if LORA_MAC_EXT
         sx1303_lora_out((const uint8_t *)& rxpkt[i], sizeof(rxpkt[i]));
 #endif
+        U64 epochMicro = (static_cast<U64>(currentTime.getSeconds()) * 1000000) + currentTime.getUSeconds();
 
         SX1303::SX1303Data data;
+        data.set_time_unix(epochMicro);
         data.set_freq_hz(rxpkt[i].freq_hz);
         data.set_freq_offset(rxpkt[i].freq_offset);
         data.set_if_chain(rxpkt[i].if_chain);

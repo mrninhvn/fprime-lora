@@ -95,6 +95,8 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
     void set_gw_state(SX1303Manager_gwState state);
     //! Send LoraWan packet to telemetry
     void send_gw_packet(const SX1303::SX1303Data& packet);
+    //! Get system time
+    bool get_time(Fw::Time &systime);
 };
 
 }  // namespace SX1303
@@ -109,6 +111,7 @@ extern "C" {
     // void sx1303_lora_out(const uint8_t* data, size_t len);
     void sx1303_set_state(U8 state);
     void sx1303_send_gw_packet(const SX1303::SX1303Data& packet);
+    bool sx1303_get_time(Fw::Time &systime);
 }
 
 #endif

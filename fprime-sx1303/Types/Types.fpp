@@ -6,6 +6,12 @@ module SX1303 {
 
     @ Struct representing SX1303 sensor data
     struct SX1303Data {
+        @ Unix timestamp, in microseconds
+        time_unix: U64
+
+        @ GPS time, milliseconds since 06.Jan.1980
+        time_gps: U64
+
         @ Central frequency of the IF chain, in Hz
         freq_hz: U32
 
