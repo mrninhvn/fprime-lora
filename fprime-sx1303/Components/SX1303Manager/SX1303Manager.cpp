@@ -152,15 +152,6 @@ void SX1303Manager ::GW_TEST_TX_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
     }
 }
 
-void SX1303Manager ::GW_TEST_RX_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
-    if (sx1303_test_hal_rx() == 0){
-        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
-    }
-    else {
-        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
-    }
-}
-
 void SX1303Manager ::GW_START_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, bool publicNet, SX1303::SX1303Manager_gwChPlan region) {
     if (sx1303_gateway_start(publicNet, region) == 0){
         this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);

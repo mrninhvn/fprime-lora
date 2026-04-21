@@ -64,13 +64,6 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
                              U32 cmdSeq            //!< The command sequence number
                              ) override;
 
-    //! Handler implementation for command GW_TEST_RX
-    //!
-    //! Lora test reception command
-    void GW_TEST_RX_cmdHandler(FwOpcodeType opCode,  //!< The opcode
-                             U32 cmdSeq            //!< The command sequence number
-                             ) override;
-
     //! Handler implementation for command GW_START
     //!
     //! Gateway start command

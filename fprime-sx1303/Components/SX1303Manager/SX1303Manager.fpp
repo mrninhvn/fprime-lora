@@ -32,9 +32,6 @@ module SX1303 {
         @ Lora test transmission command
         async command GW_TEST_TX
 
-        @ Lora test reception command
-        async command GW_TEST_RX
-
         @ Gateway start command
         async command GW_START(
             publicNet: bool, @< Is Public network
