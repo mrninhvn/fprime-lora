@@ -62,7 +62,8 @@ bool SX1303Manager ::power_on(bool on) {
         m_state = on ? SX1303::SX1303Manager_gwState::POWER_ON : SX1303::SX1303Manager_gwState::POWER_OFF;
         this->log_ACTIVITY_HI_GwState(m_state);
         this->tlmWrite_GatewayState(m_state);
-        Os::Task::delay(Fw::TimeInterval(0, 100));
+        // Os::Task::delay(Fw::TimeInterval(0, 100));
+        Os::Task::delay(Fw::TimeInterval(0, 100000));
         return true;
     }
     return false;
@@ -72,9 +73,11 @@ bool SX1303Manager ::reset() {
     // resetGateway();
     if (this->isConnected_resetGpioWrite_OutputPort(0)) {
         this->resetGpioWrite_out(0, Fw::Logic::HIGH);
-        Os::Task::delay(Fw::TimeInterval(0, 100));
+        // Os::Task::delay(Fw::TimeInterval(0, 100));
+        Os::Task::delay(Fw::TimeInterval(0, 100000));
         this->resetGpioWrite_out(0, Fw::Logic::LOW);
-        Os::Task::delay(Fw::TimeInterval(0, 100));
+        // Os::Task::delay(Fw::TimeInterval(0, 100));
+        Os::Task::delay(Fw::TimeInterval(0, 100000));
 
         m_state = SX1303::SX1303Manager_gwState::RESET;
         this->log_ACTIVITY_HI_GwState(m_state);
@@ -179,6 +182,12 @@ extern "C" {
     void sx1303_delay_ms(U32 ms) {
         if (g_sx1303_manager) {
             g_sx1303_manager->delay_ms(ms);
+        }
+    }
+
+    void sx1303_delay_us(U32 us) {
+        if (g_sx1303_manager) {
+            g_sx1303_manager->delay_us(us);
         }
     }
 

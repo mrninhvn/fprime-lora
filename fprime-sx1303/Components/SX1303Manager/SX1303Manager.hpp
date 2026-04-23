@@ -90,7 +90,9 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
     //! Debug Logging
     void log_debug(const Fw::LogStringArg& msg);
     //! Delay ms
-    void delay_ms(U32 ms) { Os::Task::delay(Fw::TimeInterval(0, ms)); }
+    void delay_ms(U32 ms) { Os::Task::delay(Fw::TimeInterval(0, ms*1000)); }
+    //! Delay us
+    void delay_us(U32 us) { Os::Task::delay(Fw::TimeInterval(0, us)); }
     // void lora_out(const uint8_t* data, size_t len);
     void set_gw_state(SX1303Manager_gwState state);
     //! Send LoraWan packet to telemetry
@@ -103,6 +105,7 @@ class SX1303Manager final : public SX1303ManagerComponentBase {
 
 extern "C" {
     void sx1303_delay_ms(U32 ms);
+    void sx1303_delay_us(U32 us);
     void sx1303_log_debug(const char* fmt, ...);
     void sx1303_power_on(bool on);
     void sx1303_reset(void);
